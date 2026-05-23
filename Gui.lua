@@ -99,17 +99,13 @@ for i, tab in ipairs(tabs) do
     UICorner.CornerRadius = UDim.new(0, 6)
     UICorner.Parent = TabButton
 
-    TabButton.MouseButton1Click:Connect(function()
-        -- Update content
-        ContentLabel.Text = tab.content
-
-        -- Show tooltip name
+    TabButton.MouseEnter:Connect(function()
         TooltipLabel.Text = tab.name
         TooltipLabel.Visible = true
+    end)
 
-        -- Hide after 1.5 seconds
-        task.delay(1.5, function()
-            TooltipLabel.Visible = false
-        end)
+    TabButton.MouseLeave:Connect(function()
+        TooltipLabel.Visible = false
+    end)
     end)
 end
