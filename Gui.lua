@@ -1,72 +1,115 @@
--- MaoScripts GUI Example
 local ScreenGui = Instance.new("ScreenGui")
-local Frame = Instance.new("Frame")
-local Title = Instance.new("TextLabel")
-local Layout = Instance.new("UIListLayout")
-local Padding = Instance.new("UIPadding")
-local Button = Instance.new("TextButton")
-local CloseButton = Instance.new("TextButton")
+local MainFrame = Instance.new("Frame")
+local TopBar = Instance.new("Frame")
+local TitleLabel = Instance.new("TextLabel")
+local Sidebar = Instance.new("Frame")
+local ContentArea = Instance.new("Frame")
+local TooltipLabel = Instance.new("TextLabel")
 
--- Main GUI setup
+-- ScreenGui
 ScreenGui.Parent = game.CoreGui
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
--- Frame (main window)
-Frame.Parent = ScreenGui
-Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-Frame.Position = UDim2.new(0.5, -175, 0.5, -150)
-Frame.Size = UDim2.new(0, 300, 0, 0) -- height is auto
-Frame.AutomaticSize = Enum.AutomaticSize.Y -- auto height!
-Frame.Active = true
-Frame.Draggable = true
+-- Main Frame
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -150)
+MainFrame.Size = UDim2.new(0, 400, 0, 300)
+MainFrame.Active = true
+MainFrame.Draggable = true
 
--- Layout (auto stacks children)
-Layout.Parent = Frame
-Layout.SortOrder = Enum.SortOrder.LayoutOrder
-Layout.Padding = UDim.new(0, 5)
-
--- Padding inside frame
-Padding.Parent = Frame
-Padding.PaddingTop = UDim.new(0, 5)
-Padding.PaddingBottom = UDim.new(0, 5)
-Padding.PaddingLeft = UDim.new(0, 10)
-Padding.PaddingRight = UDim.new(0, 10)
+-- Top Bar
+TopBar.Parent = MainFrame
+TopBar.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TopBar.Size = UDim2.new(1, 0, 0, 35)
 
 -- Title
-Title.Parent = Frame
-Title.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-Title.Size = UDim2.new(1, 0, 0, 30) -- only height matters
-Title.Text = "MaoScripts"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.Font = Enum.Font.GothamBold
-Title.TextSize = 14
-Title.LayoutOrder = 1
+TitleLabel.Parent = TopBar
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Size = UDim2.new(1, 0, 1, 0)
+TitleLabel.Text = "MaoScripts"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.TextSize = 15
 
--- Button
-Button.Parent = Frame
-Button.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
-Button.Size = UDim2.new(1, 0, 0, 35) -- full width, fixed height
-Button.Text = "Run Script"
-Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-Button.Font = Enum.Font.Gotham
-Button.TextSize = 13
-Button.LayoutOrder = 2
+-- Sidebar
+Sidebar.Parent = MainFrame
+Sidebar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Sidebar.Position = UDim2.new(0, 0, 0, 35)
+Sidebar.Size = UDim2.new(0, 50, 1, -35)
 
--- Close Button
-CloseButton.Parent = Frame
-CloseButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-CloseButton.Size = UDim2.new(1, 0, 0, 35)
-CloseButton.Text = "X"
-CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseButton.Font = Enum.Font.Gotham
-CloseButton.TextSize = 13
-CloseButton.LayoutOrder = 3
+-- Sidebar Layout
+local SidebarLayout = Instance.new("UIListLayout")
+SidebarLayout.Parent = Sidebar
+SidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+SidebarLayout.Padding = UDim.new(0, 5)
+SidebarLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+SidebarLayout.VerticalAlignment = Enum.VerticalAlignment.Top
 
--- Button Functions
-Button.MouseButton1Click:Connect(function()
-    print("Script ran!")
-end)
+-- Content Area
+ContentArea.Parent = MainFrame
+ContentArea.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+ContentArea.Position = UDim2.new(0, 50, 0, 35)
+ContentArea.Size = UDim2.new(1, -50, 1, -35)
 
-CloseButton.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy()
-end)
+-- Tooltip (name popup when tab clicked)
+TooltipLabel.Parent = MainFrame
+TooltipLabel.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+TooltipLabel.BackgroundTransparency = 0.3
+TooltipLabel.Position = UDim2.new(0, 55, 0, 40)
+TooltipLabel.Size = UDim2.new(0, 100, 0, 25)
+TooltipLabel.Text = ""
+TooltipLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TooltipLabel.Font = Enum.Font.Gotham
+TooltipLabel.TextSize = 12
+TooltipLabel.Visible = false
+TooltipLabel.ZIndex = 10
+
+-- Tab data
+local tabs = {
+    {icon = "⚔️", name = "Combat", content = "Combat scripts here"},
+    {icon = "🛡", name = "Defense", content = "Defense scripts here"},
+    {icon = "⚙️", name = "Settings", content = "Settings here"},
+}
+
+-- Content label (shows tab content)
+local ContentLabel = Instance.new("TextLabel")
+ContentLabel.Parent = ContentArea
+ContentLabel.BackgroundTransparency = 1
+ContentLabel.Size = UDim2.new(1, 0, 1, 0)
+ContentLabel.Text = "Select a tab"
+ContentLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+ContentLabel.Font = Enum.Font.Gotham
+ContentLabel.TextSize = 14
+
+local tooltipActive = false
+
+-- Create tab buttons
+for i, tab in ipairs(tabs) do
+    local TabButton = Instance.new("TextButton")
+    TabButton.Parent = Sidebar
+    TabButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    TabButton.Size = UDim2.new(0, 40, 0, 40)
+    TabButton.Text = tab.icon
+    TabButton.TextSize = 20
+    TabButton.Font = Enum.Font.Gotham
+    TabButton.LayoutOrder = i
+
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0, 6)
+    UICorner.Parent = TabButton
+
+    TabButton.MouseButton1Click:Connect(function()
+        -- Update content
+        ContentLabel.Text = tab.content
+
+        -- Show tooltip name
+        TooltipLabel.Text = tab.name
+        TooltipLabel.Visible = true
+
+        -- Hide after 1.5 seconds
+        task.delay(1.5, function()
+            TooltipLabel.Visible = false
+        end)
+    end)
+end
