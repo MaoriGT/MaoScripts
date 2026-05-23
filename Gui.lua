@@ -13,7 +13,7 @@ ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 Frame.Parent = ScreenGui
 Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 Frame.Position = UDim2.new(0.5, -175, 0.5, -150)
-Frame.Size = UDim2.new(0, 500, 0, 300)
+Frame.Size = UDim2.new(0, 1000, 0, 1000)
 Frame.Active = true
 Frame.Draggable = true
 
